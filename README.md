@@ -29,6 +29,8 @@ now Alice will warn you about:
  * Trailing whitespace characters
  * Class name/file name mismatch (for Apex files)
 
+Don't run `coffeelint` against Alice, she won't like it.
+
 getting started
 ---------------
 
