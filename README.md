@@ -1,7 +1,7 @@
 alice
 =====
 
-"...must a name mean something?" Alice asked doubtfully.
+_"...must a name mean something?" Alice asked doubtfully._
 
  * introduction
  * getting started
