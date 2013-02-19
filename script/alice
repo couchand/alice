@@ -7,13 +7,15 @@ alice = require '../src/alice.coffee'
 
 main = (argv) ->
   if !argv[1]?
-    console.log "Usage: #{argv[0]} FILE"
+    console.log "Usage: #{argv[0]} FILE [ FILE ... ]"
     return
 
-  cls = fs.readFileSync(argv[1]).toString()
-  name = argv[1].match(/\/([^\/]+)\.cls/)[1]
-  console.log "Alice is now analyzing #{name}"
-  warnings = alice.analyze name, cls
-  console.log warning for warning in warnings if warnings
+  for file in argv.slice 1
+    cls = fs.readFileSync(file).toString()
+    name = file.match(/\/([^\/]+)\.cls/)[1]
+    continue unless name
+    console.log "Alice is now analyzing #{name}"
+    warnings = alice.analyze name, cls
+    console.log warning for warning in warnings if warnings
 
 main process.argv.slice 1
