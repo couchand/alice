@@ -10,6 +10,10 @@ _"...must a name mean something?" Alice asked doubtfully._
 introduction
 ------------
 
+Like a seven-and-a-half year old girl in a land she doesn't
+know, yet still willing to tell everyone she meets all
+the mistakes they are making, Alice is simple and pedantic.
+
 Alice provides simple code quality metrics.  Really simple.
 Like so simple she doesn't build an AST, she's just running
 regexes and a state machine.
