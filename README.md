@@ -25,16 +25,14 @@ now Alice will warn you about:
  * Trailing whitespace characters
  * Class name/file name mismatch (for Apex files)
 
-Alice has a CLI intended for use with Apex as well, just run
+getting started
+---------------
+
+Alice has a CLI intended for use with Apex, just run
 
 ```bash
 > ./script/alice path/to/class/files/*
 ```
-
-getting started
----------------
-
-_nothing yet_
 
 more information
 ----------------
