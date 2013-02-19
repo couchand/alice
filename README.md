@@ -11,7 +11,7 @@ introduction
 ------------
 
 Like a seven-and-a-half year old girl in a land she doesn't
-know, yet still willing to tell everyone she meets all
+know who's still willing to tell everyone she meets all
 the mistakes they are making, Alice is simple and pedantic.
 
 Alice provides simple code quality metrics.  Really simple.
