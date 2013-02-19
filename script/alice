@@ -1,0 +1,19 @@
+#!/usr/local/bin/coffee
+# alice command line interface
+
+fs = require 'fs'
+
+alice = require '../src/alice.coffee'
+
+main = (argv) ->
+  if !argv[1]?
+    console.log "Usage: #{argv[0]} FILE"
+    return
+
+  cls = fs.readFileSync(argv[1]).toString()
+  name = argv[1].match(/\/([^\/]+)\.cls/)[1]
+  console.log "Alice is now analyzing #{name}"
+  warnings = alice.analyze name, cls
+  console.log warning for warning in warnings if warnings
+
+main process.argv.slice 1
