@@ -16,7 +16,7 @@ class Alice
     @warnings.push msg
   checkLimit: (actual, limit, msg) ->
     if actual > limit
-      @alert "File #{@name} line #{@line} #{msg}: #{actual} exceeds limit of #{limit}"
+      @alert "File #{@name} line #{@line+1} #{msg}: #{actual} exceeds limit of #{limit}"
   check: (ok, msg) ->
     if not ok
       @alert "File #{@name} #{msg}"
