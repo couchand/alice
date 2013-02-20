@@ -66,7 +66,8 @@ class Alice
     @line = 0
     class_name_match = @file.match @CLASS_NAME_REGEX
     return unless @check class_name_match, "incorrectly formatted.  Unable to locate class name."
-    @line = class_name_match[0].match(/\n/g).length
+    lines = class_name_match[0].match(/\n/g)
+    @line = lines.length if lines
     @check (class_name = class_name_match[3]) is @name, "contains a class with a different name: #{class_name}"
     @check @CLASS_NAME_VALIDATOR.test(class_name), "class should be named with CamelCase"
   checkFinalVarNames: ->
