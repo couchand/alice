@@ -39,7 +39,7 @@ class Alice
     @checkClassName()
     @checkConsistentWhitespace()
     @checkTrailingWhitespace()
-    @checkBlockLineCounts()
+    @checkBlockLengthCounts()
     return @warnings
   alert: (msg) ->
     @warnings.push msg
@@ -75,21 +75,24 @@ class Alice
     for line in [0...@lines.length]
       @line = line
       @check not /( |\t)+$/.test(@lines[line]), "contains trailing whitespace"
-  checkBlockLineCounts: ->
+  checkBlockLengthCounts: ->
     @line = 0
     cursor = 0
     stack = []
     while cursor < @file.length
       this_char = @file[cursor++]
       if this_char.match @BLOCK_OPEN
-        stack.push { char: this_char, line: @line }
+        stack.push { char: this_char, line: @line, loc: cursor }
       else if this_char.match @BLOCK_CLOSE
         block_to_close = stack.pop()
         return unless @check block_to_close.char.match(@INVERSE[this_char]), "unmatched #{block_to_close.char}, found #{this_char}"
         block_lines = @line - block_to_close.line + 1 # both lines count: line 45-45 is one line
+        block_chars = cursor - block_to_close.loc - 1 # neither brace should count
         depth = (token.char for token in stack).join('').match(@INVERSE[this_char])?.length
-        limit = @BLOCK_LINE_LIMITS[block_to_close.char]?[depth]
-        @checkLimit block_lines, limit, "block has too many lines for depth #{depth}" if limit
+        line_limit = @BLOCK_LINE_LIMITS[block_to_close.char]?[depth]
+        char_limit = @BLOCK_LENGTH_LIMITS[block_to_close.char]?[depth]
+        @checkLimit block_lines, line_limit, "`#{this_char}` block has too many lines for depth #{depth}" if line_limit
+        @checkLimit block_chars, char_limit, "`#{this_char}` block has too many chars for depth #{depth}" if char_limit
       else if this_char.match /\n/
         @line++
 
