@@ -43,11 +43,11 @@ class Alice
   analyze: ->
     @warnings = []
     @line = 0
-    @checkFileLineCount()
-    @checkLineLength()
     @checkClassName()
     @checkIdentifierNames()
     @checkFinalVarNames()
+    @checkFileLineCount()
+    @checkLineLength()
     @checkConsistentWhitespace()
     @checkTrailingWhitespace()
     @checkBlockLengthCounts()
