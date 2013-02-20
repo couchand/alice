@@ -95,7 +95,7 @@ class Alice
     cursor = 0
     stack = []
     while cursor < @file.length
-      this_char = @file[cursor++]
+      this_char = @file[cursor]
       if this_char.match @BLOCK_OPEN
         stack.push { char: this_char, line: @line, loc: cursor }
       else if this_char.match @BLOCK_CLOSE
@@ -110,6 +110,7 @@ class Alice
         @checkLimit block_chars, char_limit, "`#{this_char}` block has too many chars for depth #{depth}" if char_limit
       else if this_char.match /\n/
         @line++
+      cursor++
 
 module.exports =
   analyze: (name, file) ->
