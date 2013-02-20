@@ -31,12 +31,17 @@ class Alice
       ')': /\(/g
       '{': /\}/g
       '}': /\{/g
+    @CLASS_NAME_REGEX = /^(.|\n)*?class( |\t|\n)+([a-zA-Z][a-zA-Z0-9_]*)( |\t|\n)+/
+    @CLASS_NAME_VALIDATOR = /^[A-Z][a-zA-Z]+$/
+    @FINAL_VAR_REGEX = /final/
+    @FINAL_VAR_VALIDATOR = /(final.*static|static.*final).*[A-Z_]/
   analyze: ->
     @warnings = []
     @line = 0
     @checkFileLineCount()
     @checkLineLength()
     @checkClassName()
+    @checkFinalVarNames()
     @checkConsistentWhitespace()
     @checkTrailingWhitespace()
     @checkBlockLengthCounts()
@@ -57,9 +62,17 @@ class Alice
       @line = line
       @checkLimit @lines[line].length, @LINE_LENGTH_LIMIT, "is too long", line
   checkClassName: ->
-    class_name_match = @file.match /^(.|\n)*?class( |\t|\n)+([a-zA-Z][a-zA-Z0-9_]*)( |\t|\n)+/
+    @line = 0
+    class_name_match = @file.match @CLASS_NAME_REGEX
     return unless @check class_name_match, "incorrectly formatted.  Unable to locate class name."
+    @line = class_name_match[0].match(/\n/g).length
     @check (class_name = class_name_match[3]) is @name, "contains a class with a different name: #{class_name}"
+    @check @CLASS_NAME_VALIDATOR.test(class_name), "class should be named with CamelCase"
+  checkFinalVarNames: ->
+    for line in [0...@lines.length]
+      @line = line
+      if @FINAL_VAR_REGEX.test @line
+        @check @FINAL_VAR_VALIDATOR.test(@line), "constants should be static and named with ALL_CAPS"
   checkConsistentWhitespace: ->
     first_whitespace_char = @file.match /( |\t)/
     return unless @check first_whitespace_char, "has no whitespace."
