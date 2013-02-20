@@ -31,6 +31,8 @@ now Alice will warn you about:
    characters based on nesting level
  * Inconsistent whitespace characters
  * Trailing whitespace characters
+ * final variables named in any way other than ALL_CAPS
+ * classes named in any way other than CamelCase
  * Class name/file name mismatch (for Apex files)
 
 Don't run `coffeelint` against Alice, she won't like it.
