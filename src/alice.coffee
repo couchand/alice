@@ -85,7 +85,7 @@ class Alice
         stack.push { char: this_char, line: @line, loc: cursor }
       else if this_char.match @BLOCK_CLOSE
         block_to_close = stack.pop()
-        return unless @check block_to_close.char.match(@INVERSE[this_char]), "unmatched #{block_to_close.char}, found #{this_char}"
+        return unless @check @INVERSE[this_char].test(block_to_close?.char), "unmatched #{block_to_close?.char}, found #{this_char}"
         block_lines = @line - block_to_close.line + 1 # both lines count: line 45-45 is one line
         block_chars = cursor - block_to_close.loc - 1 # neither brace should count
         depth = (token.char for token in stack).join('').match(@INVERSE[this_char])?.length
