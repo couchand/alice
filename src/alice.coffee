@@ -34,7 +34,8 @@ class Alice
     @CLASS_NAME_REGEX = /^(.|\n)*?class( |\t|\n)+([a-zA-Z][a-zA-Z0-9_]*)( |\t|\n)+/
     @CLASS_NAME_VALIDATOR = /^[A-Z][a-zA-Z]+$/
     @FINAL_VAR_REGEX = /final/
-    @FINAL_VAR_VALIDATOR = /(final.*static|static.*final).*[A-Z_]/
+    @FINAL_VAR_STATIC_VALIDATOR = /static/
+    @FINAL_VAR_NAME_VALIDATOR = /\s[A-Z_]+[\s=\(]/
   analyze: ->
     @warnings = []
     @line = 0
@@ -71,8 +72,9 @@ class Alice
   checkFinalVarNames: ->
     for line in [0...@lines.length]
       @line = line
-      if @FINAL_VAR_REGEX.test @line
-        @check @FINAL_VAR_VALIDATOR.test(@line), "constants should be static and named with ALL_CAPS"
+      if @FINAL_VAR_REGEX.test @lines[line]
+        @check @FINAL_VAR_STATIC_VALIDATOR.test(@lines[line]), "constants should be static"
+        @check @FINAL_VAR_NAME_VALIDATOR.test(@lines[line]), "constants should be named with ALL_CAPS"
   checkConsistentWhitespace: ->
     first_whitespace_char = @file.match /( |\t)/
     return unless @check first_whitespace_char, "has no whitespace."
