@@ -113,6 +113,6 @@ class Alice
         @line++
       cursor++
 
-module.exports =
-  analyze: (name, file) ->
-    new Alice().analyze(name, file)
+alice = new Alice()
+
+module.exports = alice
