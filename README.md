@@ -43,8 +43,19 @@ getting started
 Alice has a CLI intended for use with Apex, just run
 
 ```bash
-> ./script/alice path/to/class/files/*
+> ./script/alice path/to/class/files
 ```
+
+If you are just starting to use Alice on a project,
+you can get a one-number metric on the code health
+by running
+
+```bash
+> ./script/alice path/to/class/files/* | wc -l
+```
+
+Right now it's at about 20,000 for two of my clients.
+Ouch.
 
 more information
 ----------------
