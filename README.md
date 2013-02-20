@@ -46,6 +46,12 @@ Alice has a CLI intended for use with Apex, just run
 > ./script/alice path/to/class/files
 ```
 
+To just see some example output, checkout
+
+```bash
+> ./script/alice test/Violations.cls
+```
+
 If you are just starting to use Alice on a project,
 you can get a one-number metric on the code health
 by running
