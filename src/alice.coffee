@@ -25,12 +25,12 @@ class Alice
     @BLOCK_OPEN = /[\[\(\{]/
     @BLOCK_CLOSE = /[\]\)\}]/
     @INVERSE =
-      '[': /\]/g
-      ']': /\[/g
-      '(': /\)/g
-      ')': /\(/g
-      '{': /\}/g
-      '}': /\{/g
+      '[': ']'
+      ']': '['
+      '(': ')'
+      ')': '('
+      '{': '}'
+      '}': '{'
     @CLASS_NAME_REGEX = /^(.|\n)*?class( |\t|\n)+([a-zA-Z][a-zA-Z0-9_]*)( |\t|\n)+/
     @CLASS_NAME_VALIDATOR = /^[A-Z][a-zA-Z]+$/
     @FINAL_VAR_REGEX = /final/
@@ -100,10 +100,10 @@ class Alice
         stack.push { char: this_char, line: @line, loc: cursor }
       else if this_char.match @BLOCK_CLOSE
         block_to_close = stack.pop()
-        return unless @check @INVERSE[this_char].test(block_to_close?.char), "unmatched #{block_to_close?.char}, found #{this_char}"
+        return unless @check block_to_close?.char is @INVERSE[this_char], "unmatched #{block_to_close?.char}, found #{this_char}"
         block_lines = @line - block_to_close.line + 1 # both lines count: line 45-45 is one line
         block_chars = cursor - block_to_close.loc - 1 # neither brace should count
-        depth = (token.char for token in stack).join('').match(@INVERSE[this_char])?.length
+        depth = (token.char for token in stack when token.char is @INVERSE[this_char]).length
         line_limit = @BLOCK_LINE_LIMITS[block_to_close.char]?[depth]
         char_limit = @BLOCK_LENGTH_LIMITS[block_to_close.char]?[depth]
         @checkLimit block_lines, line_limit, "`#{this_char}` block has too many lines for depth #{depth}" if line_limit
