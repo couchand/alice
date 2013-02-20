@@ -25,6 +25,10 @@ now Alice will warn you about:
    (which defaults to 300)
  * Line lengths in excess of her LINE_LENGTH_LIMIT
    (defaults to 65)
+ * Curly-braced blocks in excess of 300, 100, 40 or 5 lines,
+   given the nesting level
+ * Parenthesized expressions in excess of 150 or 50
+   characters based on nesting level
  * Inconsistent whitespace characters
  * Trailing whitespace characters
  * Class name/file name mismatch (for Apex files)
