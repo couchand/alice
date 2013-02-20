@@ -20,7 +20,7 @@ public class notViolations
     // block-length limit
     private static void doSomething()
     {
-        while ( checkFor() && farToo() && many() && conditions() && inThe() && one() block() &&
+        while ( checkFor() && farToo() && many() && conditions() && inThe() && one() && block() &&
                 thisMakes() && thisCode() && entirely() && unreadable() && andUnmaintainable()  )
         {
 
