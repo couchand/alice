@@ -47,6 +47,12 @@ Alice has a CLI intended for use with Apex, just run
 > ./script/alice path/to/class/files
 ```
 
+Or if you don't have CoffeeScript installed,
+
+```bash
+> ./script/alicejs path/to/class/files
+```
+
 To just see some example output, checkout
 
 ```bash
