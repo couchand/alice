@@ -106,8 +106,8 @@ class Alice
         depth = (token.char for token in stack when token.char is @INVERSE[this_char]).length
         line_limit = @BLOCK_LINE_LIMITS[block_to_close.char]?[depth]
         char_limit = @BLOCK_LENGTH_LIMITS[block_to_close.char]?[depth]
-        @checkLimit block_lines, line_limit, "`#{this_char}` block has too many lines for depth #{depth}" if line_limit
-        @checkLimit block_chars, char_limit, "`#{this_char}` block has too many chars for depth #{depth}" if char_limit
+        @checkLimit block_lines, line_limit, "`#{@INVERSE[this_char]}` block has too many lines for depth #{depth}" if line_limit
+        @checkLimit block_chars, char_limit, "`#{@INVERSE[this_char]}` block has too many chars for depth #{depth}" if char_limit
       else if this_char.match /\n/
         @line++
       cursor++
