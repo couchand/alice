@@ -1,0 +1,6 @@
+0a1
+> #!/usr/local/bin/node
+7c8
+<   alice = require('../src/alice.coffee');
+---
+>   alice = require('../lib/alice.js');

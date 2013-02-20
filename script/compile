@@ -2,4 +2,20 @@
 
 # compile alice coffeescript to lib folder
 
+echo "compiling alice"
+echo "> coffee -c -o lib src/*"
 coffee -c -o lib src/*
+
+echo "compiling alice cli"
+echo "> coffee -c -o script/ script/alice"
+coffee -c -o script/ script/alice
+
+echo "> patch script/alice.js script/alicejs.patch"
+patch script/alice.js script/alicejs.patch
+
+echo "> mv script/alice.js script/alicejs"
+mv script/alice.js script/alicejs
+echo "> chmod u+x script/alicejs"
+chmod u+x script/alicejs
+
+echo "done"
