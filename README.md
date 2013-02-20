@@ -21,9 +21,9 @@ regexes and a state machine.
 That means she's fast, but she isn't very powerful.  Right
 now Alice will warn you about:
 
- * File line counts in excess of her LINE_COUNT_LIMIT
+ * File line counts in excess of her `LINE_COUNT_LIMIT`
    (which defaults to 300)
- * Line lengths in excess of her LINE_LENGTH_LIMIT
+ * Line lengths in excess of her `LINE_LENGTH_LIMIT`
    (defaults to 65)
  * Curly-braced blocks in excess of 300, 100, 40 or 5 lines,
    given the nesting level
@@ -31,8 +31,8 @@ now Alice will warn you about:
    characters based on nesting level
  * Inconsistent whitespace characters
  * Trailing whitespace characters
- * final variables named in any way other than ALL_CAPS
- * classes named in any way other than CamelCase
+ * final variables named in any way other than `ALL_CAPS`
+ * classes named in any way other than `CamelCase`
  * Class name/file name mismatch (for Apex files)
 
 Don't run `coffeelint` against Alice, she won't like it.
