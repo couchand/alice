@@ -5,6 +5,7 @@ _"...must a name mean something?" Alice asked doubtfully._
 
  * introduction
  * getting started
+ * documentation
  * more information
 
 introduction
@@ -63,25 +64,32 @@ by running
 Right now it's at about 20,000 for two of my clients.
 Ouch.
 
+documentation
+-------------
+
 The API for Alice is straightforward.
+
+Load the library.
 
 ```coffeescript
 alice = require 'alice'
 ```
 
-Load the library.
+Analyze a file, ensuring that the file name matches the
+class name.
 
 ```coffeescript
 alice.analyze filename, myFile
 ```
 
-Analyze a file, ensuring that the file name matches the class name.
+Analyze a file, inferring the file name from the class name.
 
 ```coffeescript
 alice.analyze myFile
 ```
 
-Analyze a file, inferring the file name from the class name.
+Override the various default limits and patterns.  Look at
+the source for more insight into each setting.
 
 ```coffeescript
 # a little more permissive than alice
