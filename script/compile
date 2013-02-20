@@ -1,0 +1,5 @@
+#!/bin/bash
+
+# compile alice coffeescript to lib folder
+
+coffee -c -o lib src/*
