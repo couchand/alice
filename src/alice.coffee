@@ -1,8 +1,7 @@
 # alice
 
 class Alice
-  constructor: (@name, @file) ->
-    @lines = file.split '\n'
+  constructor: ->
     @LINE_COUNT_LIMIT = 300
     @LINE_LENGTH_LIMIT = 65
     @BLOCK_LINE_LIMITS =
@@ -36,7 +35,8 @@ class Alice
     @FINAL_VAR_REGEX = /final/
     @FINAL_VAR_STATIC_VALIDATOR = /static/
     @FINAL_VAR_NAME_VALIDATOR = /\s[A-Z_]+[\s=\(]/
-  analyze: ->
+  analyze: (@name, @file) ->
+    @lines = file.split '\n'
     @warnings = []
     @line = 0
     @checkClassName()
@@ -115,4 +115,4 @@ class Alice
 
 module.exports =
   analyze: (name, file) ->
-    (new Alice name, file).analyze()
+    new Alice().analyze(name, file)
