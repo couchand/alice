@@ -5,6 +5,32 @@ class Alice
     @lines = file.split '\n'
     @LINE_COUNT_LIMIT = 300
     @LINE_LENGTH_LIMIT = 65
+    @BLOCK_LINE_LIMITS =
+      '{': [
+        300 # class
+        100 # method / inner class
+        40  # block
+        5   # inner block
+      ]
+    @BLOCK_LENGTH_LIMITS =
+      '(': [
+        150 # if statements/ parameter lists
+        50  # enclosed parens
+        # don't bother checking any deeper
+      ]
+      '[': [
+        500 # far less than the legal limit of 10,000 for SOQL
+        3   # should just be the odd list index
+      ]
+    @BLOCK_OPEN = /[\[\(\{]/
+    @BLOCK_CLOSE = /[\]\)\}]/
+    @INVERSE =
+      '[': /\]/g
+      ']': /\[/g
+      '(': /\)/g
+      ')': /\(/g
+      '{': /\}/g
+      '}': /\{/g
   analyze: ->
     @warnings = []
     @line = 0
@@ -13,6 +39,7 @@ class Alice
     @checkClassName()
     @checkConsistentWhitespace()
     @checkTrailingWhitespace()
+    @checkBlockLineCounts()
     return @warnings
   alert: (msg) ->
     @warnings.push msg
@@ -48,6 +75,23 @@ class Alice
     for line in [0...@lines.length]
       @line = line
       @check not /( |\t)+$/.test(@lines[line]), "contains trailing whitespace"
+  checkBlockLineCounts: ->
+    @line = 0
+    cursor = 0
+    stack = []
+    while cursor < @file.length
+      this_char = @file[cursor++]
+      if this_char.match @BLOCK_OPEN
+        stack.push { char: this_char, line: @line }
+      else if this_char.match @BLOCK_CLOSE
+        block_to_close = stack.pop()
+        return unless @check block_to_close.char.match(@INVERSE[this_char]), "unmatched #{block_to_close.char}, found #{this_char}"
+        block_lines = @line - block_to_close.line + 1 # both lines count: line 45-45 is one line
+        depth = (token.char for token in stack).join('').match(@INVERSE[this_char])?.length
+        limit = @BLOCK_LINE_LIMITS[block_to_close.char]?[depth]
+        @checkLimit block_lines, limit, "block has too many lines for depth #{depth}" if limit
+      else if this_char.match /\n/
+        @line++
 
 module.exports =
   analyze: (name, file) ->
