@@ -36,7 +36,10 @@ class Alice
     @FINAL_VAR_STATIC_VALIDATOR = /static/
     @FINAL_VAR_NAME_VALIDATOR = /\s[A-Z_]+[\s=\(]/
   analyze: (@name, @file) ->
-    @lines = file.split '\n'
+    if not @file?
+      @file = @name
+      @name = no
+    @lines = @file.split '\n'
     @warnings = []
     @line = 0
     @checkClassName()
@@ -68,7 +71,9 @@ class Alice
     return unless @check class_name_match, "incorrectly formatted.  Unable to locate class name."
     lines = class_name_match[0].match(/\n/g)
     @line = lines.length if lines
-    @check (class_name = class_name_match[3]) is @name, "contains a class with a different name: #{class_name}"
+    class_name = class_name_match[3]
+    @name = class_name unless @name
+    @check class_name is @name, "contains a class with a different name: #{class_name}"
     @check @CLASS_NAME_VALIDATOR.test(class_name), "class should be named with CamelCase"
   checkFinalVarNames: ->
     for line in [0...@lines.length]
