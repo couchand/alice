@@ -36,12 +36,17 @@ class Alice
     @FINAL_VAR_REGEX = /final/
     @FINAL_VAR_STATIC_VALIDATOR = /static/
     @FINAL_VAR_NAME_VALIDATOR = /\s[A-Z_]+[\s=\(]/
+    @IDENTIFIER_REGEX = /[^a-zA-Z0-9_]([a-zA-Z][a-zA-Z0-9_]*)[^a-zA-Z0-9_]/
+    @IDENTIFIER_MIN_LENGTH = 3
+    @IDENTIFIER_WHITELIST = /^([ijk]|if|Id)$/
+    @IDENTIFIER_VALIDATOR = /^[a-zA-Z][a-zA-Z]$/
   analyze: ->
     @warnings = []
     @line = 0
     @checkFileLineCount()
     @checkLineLength()
     @checkClassName()
+    @checkIdentifierNames()
     @checkFinalVarNames()
     @checkConsistentWhitespace()
     @checkTrailingWhitespace()
@@ -70,6 +75,17 @@ class Alice
     @line = lines.length if lines
     @check (class_name = class_name_match[3]) is @name, "contains a class with a different name: #{class_name}"
     @check @CLASS_NAME_VALIDATOR.test(class_name), "class should be named with CamelCase"
+  checkIdentifierNames: ->
+    @line = 0
+    for line in [0...@lines.length]
+      @line = line
+      cursor = 0
+      while (match = @lines[line][cursor..].match @IDENTIFIER_REGEX)
+        identifier = match[1]
+        unless @IDENTIFIER_WHITELIST.test identifier
+          @check identifier.length >= @IDENTIFIER_MIN_LENGTH, "identifier `#{identifier}` is too short"
+          @check @IDENTIFIER_VALIDATOR.test(identifier), "identifier names should be only alphabetical"
+        cursor += match[0].length - 1 # consume only leading non-id character
   checkFinalVarNames: ->
     for line in [0...@lines.length]
       @line = line
