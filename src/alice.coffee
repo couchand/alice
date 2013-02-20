@@ -31,7 +31,7 @@ class Alice
       ')': '('
       '{': '}'
       '}': '{'
-    @CLASS_NAME_REGEX = /^(.|\n)*?class( |\t|\n)+([a-zA-Z][a-zA-Z0-9_]*)( |\t|\n)+/
+    @CLASS_NAME_REGEX = /^(\/\/.*\n|.|\n)*?class( |\t|\n)+([a-zA-Z][a-zA-Z0-9_]*)( |\t|\n)+/
     @CLASS_NAME_VALIDATOR = /^[A-Z][a-zA-Z]+$/
     @FINAL_VAR_REGEX = /final/
     @FINAL_VAR_STATIC_VALIDATOR = /static/
