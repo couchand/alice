@@ -60,6 +60,8 @@ class Card
       lastRun: @last_run
       lastScore: @last_score
 
+    @last_score
+
 class Queen
   constructor: (@project_dir) ->
     fs.mkdirSync(@project_dir) unless fs.existsSync(@project_dir)
@@ -90,8 +92,10 @@ class Queen
     results_dir = path.join @RESULTS_DIR, name
     @projects[name] = new Card name, source_dir, results_dir
   analyzeAll: ->
+    scores = {}
     for name, project of @projects
-      project.analyze()
+      scores[name] = project.analyze()
+    scores
   analyzeProject: (name) ->
     @projects[name].analyze() if @projects[name]
 
