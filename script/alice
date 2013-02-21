@@ -16,6 +16,6 @@ main = (argv) ->
     continue unless name
     console.log "Alice is now analyzing #{name}"
     warnings = alice.analyze name, cls
-    console.log warning for warning in warnings if warnings
+    console.log "File #{warning.file} line #{warning.line} #{warning.message}" for warning in warnings if warnings
 
 main process.argv.slice 1
