@@ -50,14 +50,21 @@ class Alice
     @checkTrailingWhitespace()
     @checkBlockLengthCounts()
     return @warnings
-  alert: (id, msg) ->
-    @warnings.push [id, msg]
+  alert: (id, msg, actual, limit) ->
+    violation =
+      file: @name
+      line: @line+1
+      id: id
+      message: msg
+    violation.actual = actual if actual?
+    violation.limit = limit if limit?
+    @warnings.push violation
   checkLimit: (id, actual, limit, msg) ->
     if actual > limit
-      @alert id, "File #{@name} line #{@line+1} #{msg}: #{actual} exceeds limit of #{limit}"
+      @alert id, "#{msg}: #{actual} exceeds limit of #{limit}", actual, limit
   check: (id, ok, msg) ->
     if not ok
-      @alert id, "File #{@name} line #{@line+1} #{msg}"
+      @alert id, msg
     not not ok
   checkFileLineCount: ->
     @checkLimit 5, @lines.length, @LINE_COUNT_LIMIT, "has too many lines"
