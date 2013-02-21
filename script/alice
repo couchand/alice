@@ -3,7 +3,7 @@
 
 fs = require 'fs'
 
-alice = require '../src/alice.coffee'
+alice = require '../src/alice'
 
 main = (argv) ->
   if !argv[1]?
