@@ -64,7 +64,7 @@ class Alice
   checkLineLength: ->
     for line in [0...@lines.length]
       @line = line
-      @checkLimit @lines[line].length, @LINE_LENGTH_LIMIT, "is too long", line
+      @checkLimit @lines[line].length, @LINE_LENGTH_LIMIT, "is too long"
   checkClassName: ->
     @line = 0
     class_name_match = @file.match @CLASS_NAME_REGEX
