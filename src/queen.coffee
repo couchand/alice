@@ -31,11 +31,12 @@ class Card
   constructor: (@name, @source_dir, @results_dir) ->
     fs.mkdirSync(@source_dir) unless fs.existsSync(@source_dir)
     fs.mkdirSync(@results_dir) unless fs.existsSync(@results_dir)
-    project_settings_file = suffixed(@results_dir, 'card')
-    if fs.existsSync project_settings_file
-      @load project_settings_file
+    if fs.existsSync @settings_file
+      @load @settings_file
   load: (settings_file) ->
     # currently ignoring
+  settings_file: ->
+    suffixed @results_dir, 'card'
   analyze: ->
     all_warnings = []
     @last_run = strftime "%Y-%m-%d-%H-%M-%S"
@@ -53,7 +54,7 @@ class Card
     fs.writeFileSync results_file, JSON.stringify all_warnings
 
     @last_score = all_warnings.length
-    fs.writeFileSync suffixed(@results_dir, 'card'), JSON.stringify
+    fs.writeFileSync @settings_file, JSON.stringify
       name: @name
       lastRun: @last_run
       lastScore: @last_score
@@ -66,19 +67,20 @@ class Queen
     fs.mkdirSync(@SOURCE_DIR) unless fs.existsSync(@SOURCE_DIR)
     @RESULTS_DIR = path.join @project_dir, "results"
     fs.mkdirSync(@RESULTS_DIR) unless fs.existsSync(@RESULTS_DIR)
-    queen_settings_file = suffixed(@project_dir, 'queen')
-    if fs.existsSync queen_settings_file
-      @load queen_settings_file
+    if fs.existsSync @settings_file
+      @load @settings_file
   load: (settings_file) ->
     settings = JSON.parse fs.readFileSync(settings_file).toString()
     for project, dir of settings.projects
       @_addProject project, dir
+  settings_file: ->
+    suffixed @project_dir, 'queen'
   addProject: (name, src) ->
     @_addProject name, src
     project_info = {}
     for name, card of @projects
       project_info[name] = card.source_dir
-    fs.writeFileSync suffixed(@project_dir, 'queen'), JSON.stringify
+    fs.writeFileSync @settings_file, JSON.stringify
       projects: project_info
   _addProject: (name, src) ->
     if src
