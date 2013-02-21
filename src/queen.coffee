@@ -31,12 +31,10 @@ class Card
   constructor: (@name, @source_dir, @results_dir) ->
     fs.mkdirSync(@source_dir) unless fs.existsSync(@source_dir)
     fs.mkdirSync(@results_dir) unless fs.existsSync(@results_dir)
+    @settings_file = suffixed @results_dir, 'card'
     if fs.existsSync @settings_file
       @load @settings_file
   load: (settings_file) ->
-    # currently ignoring
-  settings_file: ->
-    suffixed @results_dir, 'card'
   analyze: ->
     all_warnings = []
     @last_run = strftime "%Y-%m-%d-%H-%M-%S"
@@ -67,14 +65,13 @@ class Queen
     fs.mkdirSync(@SOURCE_DIR) unless fs.existsSync(@SOURCE_DIR)
     @RESULTS_DIR = path.join @project_dir, "results"
     fs.mkdirSync(@RESULTS_DIR) unless fs.existsSync(@RESULTS_DIR)
+    @settings_file = suffixed @project_dir, 'queen'
     if fs.existsSync @settings_file
       @load @settings_file
   load: (settings_file) ->
     settings = JSON.parse fs.readFileSync(settings_file).toString()
     for project, dir of settings.projects
       @_addProject project, dir
-  settings_file: ->
-    suffixed @project_dir, 'queen'
   addProject: (name, src) ->
     @_addProject name, src
     project_info = {}
