@@ -5,7 +5,7 @@ fs = require 'fs'
 path = require 'path'
 strftime = require 'strftime'
 
-alice = require '../src/alice.coffee'
+alice = require '../src/alice'
 
 MAX_SEARCH_DEPTH = 4
 getAllClassFiles = (dir, depth=0) ->
