@@ -36,6 +36,9 @@ now Alice will warn you about:
  * classes named in any way other than `CamelCase`
  * Class name/file name mismatch (for Apex files)
 
+For more information about the checks being run, take a
+look at [doc/checks.md](https://github.com/couchand/alice/blob/master/doc/checks.md).
+
 Don't run `coffeelint` against Alice, she won't like it.
 
 getting started
@@ -93,6 +96,24 @@ Analyze a file, inferring the file name from the class name.
 ```coffeescript
 alice.analyze myFile
 ```
+
+In either case, Alice will analyze the string you passed in
+with her various metrics.  She will return a list of objects
+representing the violations.  These have the form:
+
+```json
+{
+  "file": "FILE_NAME",
+  "line": 43,
+  "id": 3,
+  "message": "ERROR_MESSAGE",
+  "actual": 70,
+  "limit": 4
+}
+```
+
+The last two properties will only be defined for limit-
+based checks.
 
 Override the various default limits and patterns.  Look at
 the source for more insight into each setting.
