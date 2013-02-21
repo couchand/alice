@@ -104,11 +104,11 @@ representing the violations.  These have the form:
 ```json
 {
   "file": "FILE_NAME",
-  "line": LINE_NUMBER,
-  "id": CHECK_ID,
+  "line": 43,
+  "id": 3,
   "message": "ERROR_MESSAGE",
-  "actual": ACTUAL_VALUE,
-  "limit": LIMIT_VALUE
+  "actual": 70,
+  "limit": 4
 }
 ```
 
