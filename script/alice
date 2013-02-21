@@ -11,9 +11,9 @@ main = (argv) ->
     return
 
   for file in argv.slice 1
-    cls = fs.readFileSync(file).toString()
     name = file.match(/\/([^\/]+)\.cls$/)?[1]
     continue unless name
+    cls = fs.readFileSync(file).toString()
     console.log "Alice is now analyzing #{name}"
     warnings = alice.analyze name, cls
     console.log "File #{warning.file} line #{warning.line} #{warning.message}" for warning in warnings if warnings
