@@ -21,8 +21,7 @@ getAllClassFiles = (dir, depth=0) ->
 
 suffixed = (dir, name) ->
   path.join dir, "#{name}.json"
-getResultsFile = (dir) ->
-  name = strftime "%Y-%m-%d-%H-%M-%S"
+getResultsFile = (dir, name) ->
   return candidate unless fs.existsSync (candidate = suffixed dir, name)
   counter = 1
   counter++ while fs.existsSync( candidate = suffixed dir, "#{name}-#{counter}" )
@@ -32,8 +31,15 @@ class Card
   constructor: (@name, @source_dir, @results_dir) ->
     fs.mkdirSync(@source_dir) unless fs.existsSync(@source_dir)
     fs.mkdirSync(@results_dir) unless fs.existsSync(@results_dir)
+    project_settings_file = suffixed(@results_dir, 'card')
+    if fs.existsSync project_settings_file
+      @load project_settings_file
+  load: (settings_file) ->
+    # currently ignoring
   analyze: ->
     all_warnings = []
+    @last_run = strftime "%Y-%m-%d-%H-%M-%S"
+
     # go ask alice
     for file_path in getAllClassFiles @source_dir
       name = file_path.match(/\/([^\/]+)\.cls$/)?[1]
@@ -41,9 +47,16 @@ class Card
       file = fs.readFileSync(file_path).toString()
       warnings = alice.analyze name, file
       all_warnings.push warning for warning in warnings
+
     warning.project = @name for warning in all_warnings
-    results_file = getResultsFile @results_dir
+    results_file = getResultsFile @results_dir, @last_run
     fs.writeFileSync results_file, JSON.stringify all_warnings
+
+    @last_score = all_warnings.length
+    fs.writeFileSync suffixed(@results_dir, 'card'), JSON.stringify
+      name: @name
+      lastRun: @last_run
+      lastScore: @last_score
 
 class Queen
   constructor: (@project_dir) ->
@@ -53,7 +66,21 @@ class Queen
     fs.mkdirSync(@SOURCE_DIR) unless fs.existsSync(@SOURCE_DIR)
     @RESULTS_DIR = path.join @project_dir, "results"
     fs.mkdirSync(@RESULTS_DIR) unless fs.existsSync(@RESULTS_DIR)
+    queen_settings_file = suffixed(@project_dir, 'queen')
+    if fs.existsSync queen_settings_file
+      @load queen_settings_file
+  load: (settings_file) ->
+    settings = JSON.parse fs.readFileSync(settings_file).toString()
+    for project, dir of settings.projects
+      @_addProject project, dir
   addProject: (name, src) ->
+    @_addProject name, src
+    project_info = {}
+    for name, card of @projects
+      project_info[name] = card.source_dir
+    fs.writeFileSync suffixed(@project_dir, 'queen'), JSON.stringify
+      projects: project_info
+  _addProject: (name, src) ->
     if src
       source_dir = src
     else
