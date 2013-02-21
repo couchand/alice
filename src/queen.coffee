@@ -35,6 +35,9 @@ class Card
     if fs.existsSync @settings_file
       @load @settings_file
   load: (settings_file) ->
+    settings = JSON.parse fs.readFileSync(settings_file).toString()
+    @last_run = settings.lastRun
+    @last_score = settings.lastScore
   analyze: ->
     all_warnings = []
     @last_run = strftime "%Y-%m-%d-%H-%M-%S"
