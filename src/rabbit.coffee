@@ -8,16 +8,13 @@ class Card
     @last_score = info.lastScore
     @results = {}
 
-  loadRun: (run) ->
-    @getProjectResultInfo(@name, run).then @addRun(run)
-
   addRun: (run) ->
-    handler = (results) ->
+    that = @
+    @getProjectResultInfo(@name, run).then (results) ->
       for result in results
         result.run = run
-        result.project = @name
-      @results[run] = results
-    handler.bind @
+        result.project = that.name
+      that.results[run] = results
 
   getProjectResults: (name) ->
     $.get "/#{name}/results"
