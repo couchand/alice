@@ -10,6 +10,7 @@ king = require './king'
 
 class Bill
   constructor: (@project_dir) ->
+    @repo = king @project_dir
 
   listen: ->
     unless @server
@@ -33,19 +34,17 @@ class Bill
     res.end()
 
   getResource: (req_path) ->
-    repo = king @project_dir
-
     # list of projects
     if not req_path? or /^\/?$/.test req_path
       console.log "getting project list"
-      return repo.getProjects()
+      return @repo.getProjects()
 
     # project info
     if (match = req_path.match /^\/([^\/]+)\/?$/)
       project_name = match[1]
       console.log "getting project #{project_name}"
       try
-        return repo.getProjectInfo project_name
+        return @repo.getProjectInfo project_name
       catch ex
         return ['project not found']
 
@@ -54,7 +53,7 @@ class Bill
       project_name = match[1]
       console.log "getting project #{project_name} results"
       try
-        return repo.getProjectResults project_name
+        return @repo.getProjectResults project_name
       catch ex
         return ['project not found']
 
@@ -64,7 +63,7 @@ class Bill
       result_id = match[2]
       console.log "getting project #{project_name} result #{result_id}"
       try
-        return repo.getProjectResultInfo project_name, result_id
+        return @repo.getProjectResultInfo project_name, result_id
       catch ex
         return ['project not found'] if /project/i.test ex.message
         return ['result not found']
