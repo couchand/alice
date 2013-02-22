@@ -10,17 +10,17 @@ class Card
 
   addRun: (run) ->
     that = @
-    @getProjectResultInfo(@name, run).then (results) ->
+    @getResultInfo(run).then (results) ->
       for result in results
         result.run = run
         result.project = that.name
       that.results[run] = results
 
-  getProjectResults: (name) ->
-    $.get "/#{name}/results"
+  getResults: ->
+    $.get "/#{@name}/results"
 
-  getProjectResultInfo: (name, run) ->
-    $.get "/#{name}/results/#{run}"
+  getResultInfo: (run) ->
+    $.get "/#{@name}/results/#{run}"
 
 class Rabbit
   constructor: ->
