@@ -1,7 +1,10 @@
 # the white rabbit
 # brings wonderland to the world
 
+TOP_COUNT = 4
+
 projects_list = '.projects'
+results_pane = '.results'
 
 class Card
   constructor: (info) ->
@@ -66,7 +69,19 @@ class Rabbit
         that.showProject project
 
   showProject: (project) ->
-    console.log project.name
+    @report.dimension('project').filter project.name
+    results = $ results_pane
+    results.empty()
+
+    top_files = $ '<ul>'
+    for file in @report.group('file').top TOP_COUNT
+      top_files.append $ "<li>#{file.key} - #{file.value}</li>"
+    top_files.appendTo results
+
+    top_types = $ '<ul>'
+    for file in @report.group('id').top TOP_COUNT
+      top_types.append $ "<li>#{file.key} - #{file.value}</li>"
+    top_types.appendTo results
 
   getProjects: ->
     $.get '/'
