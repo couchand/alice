@@ -5,7 +5,7 @@
 public class notViolations
 {
     // inconsistent whitespace
-        
+    	
     // trailing whitespace
         
     // constants should be static
