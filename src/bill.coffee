@@ -29,8 +29,12 @@ class Bill
 
     console.log "serving request for #{req_path}"
 
-    res.setHeader 'content-type', 'application/json'
-    res.write JSON.stringify resource
+    if resource.type?
+      res.setHeader 'content-type', resource.type
+      res.write resource.content
+    else
+      res.setHeader 'content-type', 'application/json'
+      res.write JSON.stringify resource
     res.end()
 
   getResource: (req_path) ->
@@ -38,6 +42,23 @@ class Bill
     if not req_path? or /^\/?$/.test req_path
       console.log "getting project list"
       return @repo.getProjects()
+
+    # ui
+    if /\/rabbit.html\/?$/.test req_path
+      console.log "serving ui html"
+      rabbit = fs.readFileSync('www/rabbit.html')
+      return {
+        content: rabbit
+        type: 'text/html'
+      }
+
+    if /\/rabbit.js\/?$/.test req_path
+      console.log "serving ui js"
+      rabbit = fs.readFileSync('www/rabbit.js')
+      return {
+        content: rabbit
+        type: 'text/javascript'
+      }
 
     # project info
     if (match = req_path.match /^\/([^\/]+)\/?$/)
