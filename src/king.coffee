@@ -33,7 +33,7 @@ class Card
 
   _onWatch: (event, file) ->
     return unless /\.json$/.test(file)
-    return @load @settings if /^card\.json$/.test file
+    return @load file if file is @settings_file
     return unless -1 is @results.indexOf (run = file.replace /\.json$/, '')
     @results.push run
 
