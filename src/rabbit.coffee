@@ -1,6 +1,19 @@
 # the white rabbit
 # brings wonderland to the world
 
+class Card
+  constructor: (info) ->
+    @name = info.name
+    @last_run = info.lastRun
+    @last_score = info.lastScore
+    @results = {}
+
+  addRun: (run, results) ->
+    for result in results
+      result.run = run
+      result.project = @name
+    @results[run] = results
+
 class Rabbit
   constructor: ->
     @createReport()
@@ -8,15 +21,9 @@ class Rabbit
     @projects = {}
     @getProjects().then (names) ->
       loadInfo = (info) ->
-        that.projects[info.name] =
-          info: info
-          results:{}
+        proj = that.projects[info.name] = new Card info
         that.getProjectResultInfo(info.name, info.lastRun).then (results) ->
-          that.projects[info.name].results[info.lastRun] = results
-          for result in results
-            result.run = info.lastRun
-            result.project = info.name
-          that.report.add results
+          that.report.add proj.addRun info.lastRun, results
       for name in names
         that.projects[name] = {}
         that.getProjectInfo(name).then loadInfo
