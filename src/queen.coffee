@@ -34,10 +34,18 @@ class Card
     @settings_file = suffixed @results_dir, 'card'
     if fs.existsSync @settings_file
       @load @settings_file
+    else
+      @create @settings_file
   load: (settings_file) ->
     settings = JSON.parse fs.readFileSync(settings_file).toString()
     @last_run = settings.lastRun
     @last_score = settings.lastScore
+  create: (settings_file) ->
+    settings =
+      name: @name
+      lastRun: 'never'
+      lastScore: 'none'
+    fs.writeFileSync settings_file, JSON.stringify settings
   analyze: ->
     all_warnings = []
     @last_run = strftime "%Y-%m-%d-%H-%M-%S"
