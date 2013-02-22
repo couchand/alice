@@ -8,11 +8,22 @@ class Card
     @last_score = info.lastScore
     @results = {}
 
-  addRun: (run, results) ->
-    for result in results
-      result.run = run
-      result.project = @name
-    @results[run] = results
+  loadRun: (run) ->
+    @getProjectResultInfo(@name, run).then @addRun(run)
+
+  addRun: (run) ->
+    handler = (results) ->
+      for result in results
+        result.run = run
+        result.project = @name
+      @results[run] = results
+    handler.bind @
+
+  getProjectResults: (name) ->
+    $.get "/#{name}/results"
+
+  getProjectResultInfo: (name, run) ->
+    $.get "/#{name}/results/#{run}"
 
 class Rabbit
   constructor: ->
@@ -22,8 +33,8 @@ class Rabbit
     @getProjects().then (names) ->
       loadInfo = (info) ->
         proj = that.projects[info.name] = new Card info
-        that.getProjectResultInfo(info.name, info.lastRun).then (results) ->
-          that.report.add proj.addRun info.lastRun, results
+        proj.loadRun(info.lastRun).then (results) ->
+          that.report.add results
       for name in names
         that.projects[name] = {}
         that.getProjectInfo(name).then loadInfo
@@ -43,11 +54,5 @@ class Rabbit
 
   getProjectInfo: (name) ->
     $.get "/#{name}"
-
-  getProjectResults: (name) ->
-    $.get "/#{name}/results"
-
-  getProjectResultInfo: (name, run) ->
-    $.get "/#{name}/results/#{run}"
 
 window.whiteRabbit = new Rabbit()
