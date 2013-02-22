@@ -53,11 +53,11 @@ class Bill
         type: 'text/html'
       }
 
-    if /\/rabbit.js\/?$/.test req_path
-      console.log "serving ui js"
-      rabbit = fs.readFileSync('www/rabbit.js')
+    if (match = req_path.match /\/([a-zA-Z]+.js)\/?$/)
+      console.log "serving ui js: #{match[1]}"
+      jsfile = fs.readFileSync("www/#{match[1]}")
       return {
-        content: rabbit
+        content: jsfile
         type: 'text/javascript'
       }
 
