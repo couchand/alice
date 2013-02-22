@@ -89,13 +89,13 @@ class Alice
         @check 3, @FINAL_VAR_STATIC_VALIDATOR.test(@lines[line]), "constants should be static"
         @check 4, @FINAL_VAR_NAME_VALIDATOR.test(@lines[line]), "constants should be named with ALL_CAPS"
   checkConsistentWhitespace: ->
-    first_whitespace_char = @file.match /( |\t)/
+    first_whitespace_char = @file.match /\n( |\t)/
     return unless @check 7, first_whitespace_char, "has no whitespace."
-    illegal_whitespace = switch first_whitespace_char[0]
+    illegal_whitespace = switch first_whitespace_char[1]
       when '\t'
-        /[ ]/
+        /^\t*[ ]/
       when ' '
-        /\t/
+        /^[ ]*\t/
     for line in [0...@lines.length]
       @line = line
       @check 8, not illegal_whitespace.test(@lines[line]), "contains inconsistent whitespace"
