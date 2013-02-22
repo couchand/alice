@@ -55,12 +55,12 @@ class King
   getProjects: ->
     name for name, project of @projects
 
-  getProject: (name) ->
+  _getProject: (name) ->
     throw new Error "unable to find project #{name}" unless project = @projects[name]
     project
 
   getProjectInfo: (name) ->
-    project = @getProject name
+    project = @_getProject name
     return {
       name: project.name
       lastRun: project.last_run
@@ -68,11 +68,11 @@ class King
     }
 
   getProjectResults: (name) ->
-    project = @getProject name
+    project = @_getProject name
     project.results
 
   getProjectResultInfo: (name, run) ->
-    project = @getProject name
+    project = @_getProject name
     project.getResultInfo run
 
 module.exports = (dir) -> new King dir
