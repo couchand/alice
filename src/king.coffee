@@ -27,6 +27,21 @@ class Card
     runs = fs.readdirSync @results_dir
     @results = (run.replace /\.json$/, '' for run in runs when /\.json$/.test(run) and not /^card\.json$/.test run)
 
+  watch: ->
+    return if @watching
+    @watching = fs.watch @results_dir, @_onWatch.bind @
+
+  _onWatch: (event, file) ->
+    return unless /\.json$/.test(file)
+    return @load @settings if /^card\.json$/.test file
+    return unless -1 is @results.indexOf (run = file.replace /\.json$/, '')
+    @results.push run
+
+  stopWatching: ->
+    return unless @watching
+    @watching.close()
+    @watching = off
+
   getResultInfo: (run) ->
     throw new Error "unable to find results #{run}" if -1 is @results.indexOf run
     result_file = path.join @results_dir, "#{run}.json"
@@ -46,11 +61,27 @@ class King
   load: (settings_file) ->
     settings = JSON.parse fs.readFileSync(settings_file).toString()
     for project, src_dir of settings.projects
-      @_addProject project
+      @_addProject project unless @projects[project]?
 
   _addProject: (name) ->
     results_dir = path.join @results_dir, name
     @projects[name] = new Card name, results_dir
+
+  watch: ->
+    return if @watching
+    @watching = fs.watch @settings_file, @_onWatch.bind @
+    for name, project of @projects
+      project.watch()
+
+  _onWatch: (event, file) ->
+    @load @settings_file
+
+  stopWatching: ->
+    return unless @watching
+    @watching.close()
+    @watching = off
+    for name, project of @projects
+      project.stopWatching()
 
   getProjects: ->
     name for name, project of @projects
