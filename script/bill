@@ -1,0 +1,14 @@
+#!/usr/local/bin/coffee
+# bill the lizard server
+
+lizard = require '../src/bill'
+
+main = (argv) ->
+  if !argv[1]?
+    console.log "Usage: #{argv[0]} PROJECT_DIR"
+    return
+
+  bill = lizard argv[1]
+  bill.listen()
+
+main process.argv.slice 1

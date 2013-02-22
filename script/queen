@@ -1,0 +1,17 @@
+#!/usr/local/bin/coffee
+# queen of hearts runner
+
+queener = require '../src/queen'
+
+main = (argv) ->
+  if !argv[1]?
+    console.log "Usage: #{argv[0]} PROJECT_DIR [ PROJECT ]"
+    return
+
+  queen = queener argv[1]
+  if argv[2]?
+    queen.analyzeProject argv[2]
+  else
+    queen.analyzeAll()
+
+main process.argv.slice 1
