@@ -80,7 +80,7 @@ class Rabbit
 
     top_types = $ '<ul>'
     for file in @report.group('id').top TOP_COUNT
-      top_types.append $ "<li>#{file.key} - #{file.value}</li>"
+      top_types.append $ "<li>#{checks[file.key]} - #{file.value}</li>"
     top_types.appendTo results
 
   getProjects: ->

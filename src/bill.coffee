@@ -45,7 +45,7 @@ class Bill
       return @repo.getProjects()
 
     # ui
-    if /\/rabbit.html\/?$/.test req_path
+    if /^\/rabbit.html\/?$/.test req_path
       console.log "serving ui html"
       rabbit = fs.readFileSync('www/rabbit.html')
       return {
@@ -53,7 +53,7 @@ class Bill
         type: 'text/html'
       }
 
-    if (match = req_path.match /\/([a-zA-Z]+.js)\/?$/)
+    if (match = req_path.match /^\/([a-zA-Z\/]+.js)\/?$/)
       console.log "serving ui js: #{match[1]}"
       jsfile = fs.readFileSync("www/#{match[1]}")
       return {
