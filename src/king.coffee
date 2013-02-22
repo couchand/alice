@@ -46,9 +46,9 @@ class King
   load: (settings_file) ->
     settings = JSON.parse fs.readFileSync(settings_file).toString()
     for project, src_dir of settings.projects
-      @addProject project
+      @_addProject project
 
-  addProject: (name) ->
+  _addProject: (name) ->
     results_dir = path.join @results_dir, name
     @projects[name] = new Card name, results_dir
 
