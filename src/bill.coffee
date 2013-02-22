@@ -11,6 +11,7 @@ king = require './king'
 class Bill
   constructor: (@project_dir) ->
     @repo = king @project_dir
+    @repo.watch()
 
   listen: ->
     unless @server
