@@ -10,9 +10,17 @@ queen = require './queen'
 
 class Bill
   constructor: (@project_dir) ->
-    @server = http.createServer @serve.bind @
-    @server.listen 8080
-    console.log 'listening on localhost:8080'
+
+  listen: ->
+    unless @server
+      @server = http.createServer @serve.bind @
+      @server.listen 8080
+      console.log 'listening on localhost:8080'
+    @server
+
+  close: ->
+    @server.close()
+    @server = off
 
   serve: (req, res) ->
     { pathname: req_path } = url.parse req.url
