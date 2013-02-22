@@ -6,7 +6,7 @@ url = require 'url'
 fs = require 'fs'
 path = require 'path'
 
-queen = require './queen'
+king = require './king'
 
 class Bill
   constructor: (@project_dir) ->
@@ -33,38 +33,40 @@ class Bill
     res.end()
 
   getResource: (req_path) ->
-    repo = queen @project_dir
+    repo = king @project_dir
 
     # list of projects
     if not req_path? or /^\/?$/.test req_path
-      return (name for name, dif of repo.projects)
+      console.log "getting project list"
+      return repo.getProjects()
 
     # project info
     if (match = req_path.match /^\/([^\/]+)\/?$/)
       project_name = match[1]
-      return ['project not found'] unless project = repo.projects[project_name]
-      return {
-        name: project.name
-        lastRun: project.last_run
-        lastScore: project.last_score
-      }
+      console.log "getting project #{project_name}"
+      try
+        return repo.getProjectInfo project_name
+      catch ex
+        return ['project not found']
 
     # list of results
     if (match = req_path.match /^\/([^\/]+)\/results\/?$/)
       project_name = match[1]
-      return ['project not found'] unless project = repo.projects[project_name]
-
-      runs = fs.readdirSync(project.results_dir)
-      return (run.replace /\.json$/, '' for run in runs)
+      console.log "getting project #{project_name} results"
+      try
+        return repo.getProjectResults project_name
+      catch ex
+        return ['project not found']
 
     # result info
     if (match = req_path.match /^\/([^\/]+)\/results\/([^\/]+)\/?$/)
       project_name = match[1]
       result_id = match[2]
-      return ['project not found'] unless project = repo.projects[project_name]
-
-      result_file = path.join project.results_dir, "#{result_id}.json"
-      return ['result not found'] unless fs.existsSync result_file
-      return JSON.parse fs.readFileSync(result_file).toString()
+      console.log "getting project #{project_name} result #{result_id}"
+      try
+        return repo.getProjectResultInfo project_name, result_id
+      catch ex
+        return ['project not found'] if /project/i.test ex.message
+        return ['result not found']
 
 module.exports = (dir) -> new Bill dir
