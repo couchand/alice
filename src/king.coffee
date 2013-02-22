@@ -19,7 +19,9 @@ class Card
 
   load: (settings_file) ->
     mustHave "project settings", settings_file
-    settings = JSON.parse fs.readFileSync(settings_file).toString()
+    settings_raw = fs.readFileSync(settings_file).toString()
+    return unless settings_raw
+    settings = JSON.parse settings_raw
     @last_run = settings.lastRun
     @last_score = settings.lastScore
 
@@ -33,7 +35,7 @@ class Card
 
   _onWatch: (event, file) ->
     return unless /\.json$/.test(file)
-    return @load file if file is @settings_file
+    return @load @settings_file if /^card\.json$/.test file
     return unless -1 is @results.indexOf (run = file.replace /\.json$/, '')
     @results.push run
 
@@ -59,7 +61,9 @@ class King
     @load @settings_file
 
   load: (settings_file) ->
-    settings = JSON.parse fs.readFileSync(settings_file).toString()
+    settings_raw = fs.readFileSync(settings_file).toString()
+    return unless settings_raw
+    settings = JSON.parse settings_raw
     for project, src_dir of settings.projects
       @_addProject project unless @projects[project]?
 
